@@ -35,6 +35,7 @@ interface StoreState {
     selectHole: (partId: string, holeIndex: number) => void;
     resetSelection: () => void;
     clearAll: () => void;
+    removePart: (id: string) => void;
 }
 
 export const useStore = create<StoreState>((set, get) => ({
@@ -218,4 +219,25 @@ export const useStore = create<StoreState>((set, get) => ({
     resetSelection: () => set({ selectedPartId: null, selectedHole: null }),
 
     clearAll: () => set({ parts: [], joints: [], selectedPartId: null, selectedHole: null }),
+
+    removePart: (id: string) => {
+        set((state) => {
+            // Remove the part
+            const newParts = state.parts.filter((p) => p.id !== id);
+
+            // Remove any joints connected to this part
+            const newJoints = state.joints.filter((j) => j.partA !== id && j.partB !== id);
+
+            // Reset selection if the removed part was selected
+            const newSelectedPartId = state.selectedPartId === id ? null : state.selectedPartId;
+            const newSelectedHole = state.selectedHole?.partId === id ? null : state.selectedHole;
+
+            return {
+                parts: newParts,
+                joints: newJoints,
+                selectedPartId: newSelectedPartId,
+                selectedHole: newSelectedHole
+            };
+        });
+    },
 }));

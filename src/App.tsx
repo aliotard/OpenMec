@@ -2,11 +2,18 @@ import { Canvas } from '@react-three/fiber';
 import { Scene } from './components/3d/Scene';
 import { Toolbar } from './components/ui/Toolbar';
 import { PropertiesPanel } from './components/ui/PropertiesPanel';
+import { useStore } from './store/useStore';
 
 function App() {
+  const resetSelection = useStore((state) => state.resetSelection);
+
   return (
     <>
-      <Canvas camera={{ position: [5, 5, 5], fov: 50 }} shadows>
+      <Canvas
+        camera={{ position: [5, 5, 5], fov: 50 }}
+        shadows
+        onPointerMissed={() => resetSelection()}
+      >
         <color attach="background" args={['#202020']} />
         <Scene />
       </Canvas>

@@ -4,13 +4,15 @@ import { useStore } from '../../store/useStore';
 export function Toolbar() {
     // Toolbar component for adding parts
     const addPart = useStore((state) => state.addPart);
+    const removePart = useStore((state) => state.removePart);
+    const selectedPartId = useStore((state) => state.selectedPartId);
     const [length, setLength] = useState(5);
     const dialogRef = useRef<HTMLDialogElement>(null);
 
     const handleAddStrip = () => {
         addPart('strip', {
             length,
-            position: [Math.random() * 5 - 2.5, 0, Math.random() * 5 - 2.5],
+            position: [0, 0, Math.random() * 30],
             rotation: [Math.PI / 2, 0, 0] // Lay flat
         });
     };
@@ -35,6 +37,17 @@ export function Toolbar() {
                 className="btn btn-primary"
             >
                 Add Strip
+            </button>
+
+            <div className="separator" />
+
+            <button
+                onClick={() => selectedPartId && removePart(selectedPartId)}
+                disabled={!selectedPartId}
+                className="btn btn-secondary"
+                title={selectedPartId ? "Delete selected part" : "Select a part to delete"}
+            >
+                Delete
             </button>
 
             <div className="separator" />

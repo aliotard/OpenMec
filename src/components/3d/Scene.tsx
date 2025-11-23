@@ -32,9 +32,9 @@ export function Scene() {
                             rotation={part.rotation}
                             color={part.color}
                             selectedHoleIndex={isSelected ? selectedHole?.holeIndex : null}
-                            onHoleClick={(e, holeIndex) => selectHole(part.id, holeIndex)}
+                            onHoleClick={(_, holeIndex) => selectHole(part.id, holeIndex)}
                             isSelected={selectedPartId === part.id}
-                            onPartClick={(e) => selectPart(part.id)}
+                            onPartClick={() => selectPart(part.id)}
                         />
                     );
                 }
@@ -45,6 +45,8 @@ export function Scene() {
                             position={part.position}
                             rotation={part.rotation}
                             color={part.color}
+                            isSelected={selectedPartId === part.id}
+                            onClick={() => selectPart(part.id)}
                         />
                     );
                 }
@@ -55,6 +57,8 @@ export function Scene() {
                             position={part.position}
                             rotation={part.rotation}
                             color={part.color}
+                            isSelected={selectedPartId === part.id}
+                            onClick={() => selectPart(part.id)}
                         />
                     );
                 }
