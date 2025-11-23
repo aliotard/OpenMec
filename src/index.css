@@ -1,0 +1,185 @@
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #1a1a1a;
+  font-family: 'Inter', sans-serif;
+}
+
+canvas {
+  display: block;
+}
+
+/* Toolbar */
+.toolbar {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(30, 30, 30, 0.8);
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.toolbar-input {
+  width: 50px;
+  padding: 5px;
+  border-radius: 4px;
+  border: none;
+  background-color: #333;
+  color: white;
+}
+
+.separator {
+  width: 1px;
+  height: 20px;
+  background-color: #555;
+  margin: 0 5px;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  font-weight: bold;
+  padding: 8px 16px;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+.btn-danger {
+  background-color: #c0392b;
+}
+
+.btn-danger:hover {
+  background-color: #e74c3c;
+}
+
+.btn-secondary {
+  background-color: #555;
+}
+
+.btn-secondary:hover {
+  background-color: #666;
+}
+
+.btn-small {
+  flex: 1;
+  padding: 5px;
+  background-color: #444;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-small:hover {
+  background-color: #555;
+}
+
+/* Dialog */
+.dialog {
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #222;
+  color: white;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-title {
+  margin-top: 0;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* Properties Panel */
+.properties-panel {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background-color: rgba(30, 30, 30, 0.8);
+  padding: 15px;
+  border-radius: 8px;
+  color: white;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 200px;
+}
+
+.panel-title {
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+}
+
+.panel-section {
+  margin-bottom: 10px;
+}
+
+.panel-label {
+  margin-bottom: 5px;
+}
+
+.rotation-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.panel-footer {
+  margin-top: 15px;
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+/* App */
+.app-title-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 1.5rem;
+}
