@@ -112,6 +112,13 @@ canvas {
   background-color: #555;
 }
 
+.btn-small:disabled {
+  background-color: #333;
+  color: #666;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 /* Dialog */
 .dialog {
   padding: 20px;

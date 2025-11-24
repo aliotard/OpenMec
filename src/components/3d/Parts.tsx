@@ -35,11 +35,6 @@ export function Screw({ position = [0, 0, 0], rotation = [0, 0, 0], color = '#bd
                 <cylinderGeometry args={[1.9, 1.9, 10, 16]} />
                 <meshStandardMaterial {...materialProps} />
             </mesh>
-            {/* Slot (visual detail) */}
-            <mesh position={[0, 0, -2.1]}>
-                <boxGeometry args={[4, 0.5, 0.5]} />
-                <meshStandardMaterial color="#555" />
-            </mesh>
         </group>
     );
 }
