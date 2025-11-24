@@ -39,6 +39,16 @@ export function Toolbar() {
                 Add Strip
             </button>
 
+            <button
+                onClick={() => addPart('corner-bracket', {
+                    position: [0, 0, Math.random() * 30],
+                    rotation: [Math.PI / 2, 0, 0]
+                })}
+                className="btn btn-primary"
+            >
+                Add Corner Bracket
+            </button>
+
             <div className="separator" />
 
             <button

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import * as THREE from 'three';
 
-export type PartType = 'strip' | 'screw' | 'nut';
+export type PartType = 'strip' | 'screw' | 'nut' | 'corner-bracket';
 
 export interface Part {
     id: string;
@@ -21,6 +21,16 @@ export interface Joint {
     partB: string; // The child part (e.g. another strip or screw)
     holeB?: number; // Index of hole on partB (if applicable)
 }
+
+const getHoleOffset = (type: PartType, index: number) => {
+    const HOLE_SPACING = 12.7;
+    if (type === 'corner-bracket') {
+        if (index === 0) return new THREE.Vector3(0, 0, 0);
+        if (index === 1) return new THREE.Vector3(HOLE_SPACING, 0, 0);
+        if (index === 2) return new THREE.Vector3(0, HOLE_SPACING, 0);
+    }
+    return new THREE.Vector3(index * HOLE_SPACING, 0, 0);
+};
 
 interface StoreState {
     parts: Part[];
@@ -99,7 +109,7 @@ export const useStore = create<StoreState>((set, get) => ({
                     const pPos = new THREE.Vector3(...p.position);
                     const pRot = new THREE.Euler(...p.rotation);
                     const pQuat = new THREE.Quaternion().setFromEuler(pRot);
-                    const hOffset = new THREE.Vector3(hIndex * HOLE_SPACING, 0, 0);
+                    const hOffset = getHoleOffset(p.type, hIndex);
                     hOffset.applyQuaternion(pQuat);
                     return pPos.add(hOffset);
                 };
@@ -112,7 +122,7 @@ export const useStore = create<StoreState>((set, get) => ({
                 const myHoleIndex = isChild ? joint.holeB! : joint.holeA;
                 const myRot = new THREE.Euler(...newRotation);
                 const myQuat = new THREE.Quaternion().setFromEuler(myRot);
-                const myHoleOffset = new THREE.Vector3(myHoleIndex * HOLE_SPACING, 0, 0);
+                const myHoleOffset = getHoleOffset(part.type, myHoleIndex);
                 myHoleOffset.applyQuaternion(myQuat);
 
                 let newPos: THREE.Vector3;
@@ -181,7 +191,7 @@ export const useStore = create<StoreState>((set, get) => ({
                     const partPos = new THREE.Vector3(...part.position);
                     const partRot = new THREE.Euler(...part.rotation);
                     const partQuat = new THREE.Quaternion().setFromEuler(partRot);
-                    const holeOffset = new THREE.Vector3(hIndex * HOLE_SPACING, 0, 0);
+                    const holeOffset = getHoleOffset(part.type, hIndex);
                     holeOffset.applyQuaternion(partQuat);
                     return partPos.add(holeOffset);
                 };
@@ -201,7 +211,7 @@ export const useStore = create<StoreState>((set, get) => ({
                     const stackOffset = new THREE.Vector3(0, 0, -THICKNESS);
                     stackOffset.applyQuaternion(partAQuat);
 
-                    const holeAOffset = new THREE.Vector3(selectedHole.holeIndex * HOLE_SPACING, 0, 0);
+                    const holeAOffset = getHoleOffset(partA.type, selectedHole.holeIndex);
                     holeAOffset.applyQuaternion(partAQuat);
 
                     const newPosA = posB.clone().sub(stackOffset).sub(holeAOffset);
@@ -253,7 +263,7 @@ export const useStore = create<StoreState>((set, get) => ({
 
                     const partBRot = new THREE.Euler(...partB.rotation);
                     const partBQuat = new THREE.Quaternion().setFromEuler(partBRot);
-                    const holeBOffset = new THREE.Vector3(holeIndex * HOLE_SPACING, 0, 0);
+                    const holeBOffset = getHoleOffset(partB.type, holeIndex);
                     holeBOffset.applyQuaternion(partBQuat);
 
                     const stackOffset = new THREE.Vector3(0, 0, -THICKNESS);

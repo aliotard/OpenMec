@@ -1,5 +1,6 @@
 import { useStore } from '../../store/useStore';
 import { Strip } from './Strip';
+import { CornerBracket } from './CornerBracket';
 import { Screw, Nut } from './Parts';
 import { OrbitControls, Environment, Grid } from '@react-three/drei';
 
@@ -28,6 +29,21 @@ export function Scene() {
                             key={part.id}
                             id={part.id}
                             length={part.length || 5}
+                            position={part.position}
+                            rotation={part.rotation}
+                            color={part.color}
+                            selectedHoleIndex={isSelected ? selectedHole?.holeIndex : null}
+                            onHoleClick={(_, holeIndex) => selectHole(part.id, holeIndex)}
+                            isSelected={selectedPartId === part.id}
+                            onPartClick={() => selectPart(part.id)}
+                        />
+                    );
+                }
+                if (part.type === 'corner-bracket') {
+                    return (
+                        <CornerBracket
+                            key={part.id}
+                            id={part.id}
                             position={part.position}
                             rotation={part.rotation}
                             color={part.color}
