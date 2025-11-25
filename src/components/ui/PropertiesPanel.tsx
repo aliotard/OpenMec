@@ -27,7 +27,7 @@ export function PropertiesPanel() {
                 <strong>Type:</strong> {selectedPart.type}
             </div>
 
-            {(selectedPart.type === 'strip' || selectedPart.type === 'corner-bracket') && (
+            {(selectedPart.type === 'strip' || selectedPart.type === 'corner-bracket' || selectedPart.type === 'angle-bracket') && (
                 <div>
                     <div className="panel-label">Rotation {isLocked && <span style={{ fontSize: '0.8em', color: '#e74c3c' }}>(Locked)</span>}</div>
                     <div className="rotation-controls">

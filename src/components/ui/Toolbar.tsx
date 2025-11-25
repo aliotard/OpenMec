@@ -49,6 +49,16 @@ export function Toolbar() {
                 Add Corner Bracket
             </button>
 
+            <button
+                onClick={() => addPart('angle-bracket', {
+                    position: [0, 0, Math.random() * 30],
+                    rotation: [Math.PI / 2, 0, 0]
+                })}
+                className="btn btn-primary"
+            >
+                Add Angle Bracket
+            </button>
+
             <div className="separator" />
 
             <button
