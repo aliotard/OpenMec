@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
 import type { ThreeEvent } from '@react-three/fiber';
+import { getPartMaterial } from '../../utils/materials';
+import { SelectedHoleIndicator } from './SelectedHoleIndicator';
+import { HOLE_SPACING, STRIP_WIDTH, HOLE_RADIUS, THICKNESS } from '../../utils/constants';
 
 interface CornerBracketProps {
     position?: [number, number, number];
@@ -13,18 +16,13 @@ interface CornerBracketProps {
     onPartClick?: (e: ThreeEvent<MouseEvent>) => void;
 }
 
-const HOLE_SPACING = 12.7; // mm
-const STRIP_WIDTH = 12.7; // mm
-const HOLE_RADIUS = 4.1 / 2; // mm
-const THICKNESS = 1; // mm
-
 const HOLE_POSITIONS = [
     [0, 0, 0],
     [HOLE_SPACING, 0, 0],
     [0, HOLE_SPACING, 0]
 ];
 
-export function CornerBracket({ position = [0, 0, 0], rotation = [0, 0, 0], color = '#e74c3c', id, selectedHoleIndex, onHoleClick, isSelected, onPartClick }: CornerBracketProps) {
+export function CornerBracket({ position = [0, 0, 0], rotation = [0, 0, 0], color = '#bdc3c7', id, selectedHoleIndex, onHoleClick, isSelected, onPartClick }: CornerBracketProps) {
     const shape = useMemo(() => {
         const s = new THREE.Shape();
         const radius = STRIP_WIDTH / 2;
@@ -73,12 +71,7 @@ export function CornerBracket({ position = [0, 0, 0], rotation = [0, 0, 0], colo
         <group position={position} rotation={rotation}>
             <mesh onClick={handleClick} castShadow receiveShadow>
                 <extrudeGeometry args={[shape, config]} />
-                <meshStandardMaterial
-                    color={isSelected ? '#ff9f43' : color}
-                    metalness={0.6}
-                    roughness={0.4}
-                    emissive={isSelected ? '#442200' : '#000000'}
-                />
+                <meshStandardMaterial {...getPartMaterial(color, isSelected)} />
             </mesh>
 
             {/* Invisible Hitboxes for Holes */}
@@ -97,16 +90,7 @@ export function CornerBracket({ position = [0, 0, 0], rotation = [0, 0, 0], colo
             {/* Selected Hole Indicator */}
             {selectedHoleIndex !== undefined && selectedHoleIndex !== null && HOLE_POSITIONS[selectedHoleIndex] && (
                 <group position={[HOLE_POSITIONS[selectedHoleIndex][0], HOLE_POSITIONS[selectedHoleIndex][1], 0]}>
-                    {/* Top Ring */}
-                    <mesh position={[0, 0, THICKNESS + 0.02]}>
-                        <ringGeometry args={[HOLE_RADIUS + 0.8, HOLE_RADIUS + 1.8, 32]} />
-                        <meshBasicMaterial color="#f1c40f" toneMapped={false} side={THREE.DoubleSide} />
-                    </mesh>
-                    {/* Bottom Ring */}
-                    <mesh position={[0, 0, -0.02]}>
-                        <ringGeometry args={[HOLE_RADIUS + 0.8, HOLE_RADIUS + 1.8, 32]} />
-                        <meshBasicMaterial color="#f1c40f" toneMapped={false} side={THREE.DoubleSide} />
-                    </mesh>
+                    <SelectedHoleIndicator holeRadius={HOLE_RADIUS} partThickness={THICKNESS} />
                 </group>
             )}
         </group>

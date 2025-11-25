@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
 import type { ThreeEvent } from '@react-three/fiber';
+import { getPartMaterial } from '../../utils/materials';
+import { SelectedHoleIndicator } from './SelectedHoleIndicator';
+import { HOLE_SPACING, STRIP_WIDTH, HOLE_RADIUS, THICKNESS } from '../../utils/constants';
 
 interface StripProps {
     length: number; // Number of holes
@@ -12,12 +15,7 @@ interface StripProps {
     onHoleClick?: (e: ThreeEvent<MouseEvent>, holeIndex: number) => void;
 }
 
-const HOLE_SPACING = 12.7; // mm
-const STRIP_WIDTH = 12.7; // mm
-const HOLE_RADIUS = 4.1 / 2; // mm
-const THICKNESS = 1; // mm
-
-export function Strip({ length, position = [0, 0, 0], rotation = [0, 0, 0], color = '#e74c3c', id, selectedHoleIndex, onHoleClick, isSelected, onPartClick }: StripProps & { isSelected?: boolean, onPartClick?: (e: ThreeEvent<MouseEvent>) => void }) {
+export function Strip({ length, position = [0, 0, 0], rotation = [0, 0, 0], color = '#bdc3c7', id, selectedHoleIndex, onHoleClick, isSelected, onPartClick }: StripProps & { isSelected?: boolean, onPartClick?: (e: ThreeEvent<MouseEvent>) => void }) {
     const shape = useMemo(() => {
         const s = new THREE.Shape();
         const totalLength = (length - 1) * HOLE_SPACING;
@@ -62,12 +60,7 @@ export function Strip({ length, position = [0, 0, 0], rotation = [0, 0, 0], colo
         <group position={position} rotation={rotation}>
             <mesh onClick={handleClick} castShadow receiveShadow>
                 <extrudeGeometry args={[shape, config]} />
-                <meshStandardMaterial
-                    color={isSelected ? '#ff9f43' : color}
-                    metalness={0.6}
-                    roughness={0.4}
-                    emissive={isSelected ? '#442200' : '#000000'}
-                />
+                <meshStandardMaterial {...getPartMaterial(color, isSelected)} />
             </mesh>
 
             {/* Invisible Hitboxes for Holes */}
@@ -86,16 +79,7 @@ export function Strip({ length, position = [0, 0, 0], rotation = [0, 0, 0], colo
             {/* Selected Hole Indicator */}
             {selectedHoleIndex !== undefined && selectedHoleIndex !== null && (
                 <group position={[selectedHoleIndex * HOLE_SPACING, 0, 0]}>
-                    {/* Top Ring */}
-                    <mesh position={[0, 0, THICKNESS + 0.02]}>
-                        <ringGeometry args={[HOLE_RADIUS + 0.8, HOLE_RADIUS + 1.8, 32]} />
-                        <meshBasicMaterial color="#f1c40f" toneMapped={false} side={THREE.DoubleSide} />
-                    </mesh>
-                    {/* Bottom Ring */}
-                    <mesh position={[0, 0, -0.02]}>
-                        <ringGeometry args={[HOLE_RADIUS + 0.8, HOLE_RADIUS + 1.8, 32]} />
-                        <meshBasicMaterial color="#f1c40f" toneMapped={false} side={THREE.DoubleSide} />
-                    </mesh>
+                    <SelectedHoleIndicator holeRadius={HOLE_RADIUS} partThickness={THICKNESS} />
                 </group>
             )}
         </group>

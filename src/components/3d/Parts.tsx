@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
 import type { ThreeEvent } from '@react-three/fiber';
+import { getPartMaterial } from '../../utils/materials';
 
 interface PartProps {
     position?: [number, number, number];
@@ -16,12 +17,7 @@ export function Screw({ position = [0, 0, 0], rotation = [0, 0, 0], color = '#bd
         if (onClick) onClick(e);
     };
 
-    const materialProps = {
-        color: isSelected ? '#ff9f43' : color,
-        metalness: 0.8,
-        roughness: 0.3,
-        emissive: isSelected ? '#442200' : '#000000'
-    };
+    const materialProps = getPartMaterial(color, isSelected);
 
     return (
         <group position={position} rotation={rotation} onClick={handleClick}>
@@ -73,12 +69,7 @@ export function Nut({ position = [0, 0, 0], rotation = [0, 0, 0], color = '#bdc3
             {/* Nut: Z range [0, 2] (going down in world Y if local Z is -Y) */}
             <mesh position={[0, 0, 0]} castShadow receiveShadow>
                 <extrudeGeometry args={[shape, { depth: 2, bevelEnabled: true, bevelSize: 0.2, bevelThickness: 0.2 }]} />
-                <meshStandardMaterial
-                    color={isSelected ? '#ff9f43' : color}
-                    metalness={0.8}
-                    roughness={0.3}
-                    emissive={isSelected ? '#442200' : '#000000'}
-                />
+                <meshStandardMaterial {...getPartMaterial(color, isSelected)} />
             </mesh>
         </group>
     );

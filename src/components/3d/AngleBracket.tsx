@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
 import type { ThreeEvent } from '@react-three/fiber';
+import { getPartMaterial } from '../../utils/materials';
+import { SelectedHoleIndicator } from './SelectedHoleIndicator';
+import { HOLE_SPACING, STRIP_WIDTH, HOLE_RADIUS, THICKNESS } from '../../utils/constants';
 
 interface AngleBracketProps {
     position?: [number, number, number];
@@ -13,12 +16,7 @@ interface AngleBracketProps {
     onPartClick?: (e: ThreeEvent<MouseEvent>) => void;
 }
 
-const HOLE_SPACING = 12.7; // mm
-const STRIP_WIDTH = 12.7; // mm
-const HOLE_RADIUS = 4.1 / 2; // mm
-const THICKNESS = 1; // mm
-
-export function AngleBracket({ position = [0, 0, 0], rotation = [0, 0, 0], color = '#e74c3c', id, selectedHoleIndex, onHoleClick, isSelected, onPartClick }: AngleBracketProps) {
+export function AngleBracket({ position = [0, 0, 0], rotation = [0, 0, 0], color = '#bdc3c7', id, selectedHoleIndex, onHoleClick, isSelected, onPartClick }: AngleBracketProps) {
     // Flange 1 (Base) Shape
     const shape1 = useMemo(() => {
         const s = new THREE.Shape();
@@ -66,12 +64,7 @@ export function AngleBracket({ position = [0, 0, 0], rotation = [0, 0, 0], color
                 {/* Flange 1 (Base) */}
                 <mesh castShadow receiveShadow>
                     <extrudeGeometry args={[shape1, config]} />
-                    <meshStandardMaterial
-                        color={isSelected ? '#ff9f43' : color}
-                        metalness={0.6}
-                        roughness={0.4}
-                        emissive={isSelected ? '#442200' : '#000000'}
-                    />
+                    <meshStandardMaterial {...getPartMaterial(color, isSelected)} />
                 </mesh>
 
                 {/* Flange 2 (Upright) */}
@@ -82,12 +75,7 @@ export function AngleBracket({ position = [0, 0, 0], rotation = [0, 0, 0], color
                     receiveShadow
                 >
                     <extrudeGeometry args={[shape1, config]} />
-                    <meshStandardMaterial
-                        color={isSelected ? '#ff9f43' : color}
-                        metalness={0.6}
-                        roughness={0.4}
-                        emissive={isSelected ? '#442200' : '#000000'}
-                    />
+                    <meshStandardMaterial {...getPartMaterial(color, isSelected)} />
                 </mesh>
             </group>
 
@@ -105,14 +93,7 @@ export function AngleBracket({ position = [0, 0, 0], rotation = [0, 0, 0], color
 
             {selectedHoleIndex === 0 && (
                 <group position={[0, 0, 0]}>
-                    <mesh position={[0, 0, THICKNESS + 0.02]}>
-                        <ringGeometry args={[HOLE_RADIUS + 0.8, HOLE_RADIUS + 1.8, 32]} />
-                        <meshBasicMaterial color="#f1c40f" toneMapped={false} side={THREE.DoubleSide} />
-                    </mesh>
-                    <mesh position={[0, 0, -0.02]}>
-                        <ringGeometry args={[HOLE_RADIUS + 0.8, HOLE_RADIUS + 1.8, 32]} />
-                        <meshBasicMaterial color="#f1c40f" toneMapped={false} side={THREE.DoubleSide} />
-                    </mesh>
+                    <SelectedHoleIndicator holeRadius={HOLE_RADIUS} partThickness={THICKNESS} />
                 </group>
             )}
 
@@ -128,14 +109,7 @@ export function AngleBracket({ position = [0, 0, 0], rotation = [0, 0, 0], color
 
             {selectedHoleIndex === 1 && (
                 <group position={[HOLE_SPACING / 2, 0, HOLE_SPACING / 2]} rotation={[0, -Math.PI / 2, 0]}>
-                    <mesh position={[0, 0, 0.02]}>
-                        <ringGeometry args={[HOLE_RADIUS + 0.8, HOLE_RADIUS + 1.8, 32]} />
-                        <meshBasicMaterial color="#f1c40f" toneMapped={false} side={THREE.DoubleSide} />
-                    </mesh>
-                    <mesh position={[0, 0, THICKNESS + 0.02]}>
-                        <ringGeometry args={[HOLE_RADIUS + 0.8, HOLE_RADIUS + 1.8, 32]} />
-                        <meshBasicMaterial color="#f1c40f" toneMapped={false} side={THREE.DoubleSide} />
-                    </mesh>
+                    <SelectedHoleIndicator holeRadius={HOLE_RADIUS} partThickness={THICKNESS} />
                 </group>
             )}
         </group>

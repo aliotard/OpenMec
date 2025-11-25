@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import * as THREE from 'three';
+import { HOLE_SPACING, THICKNESS } from '../utils/constants';
 
 export type PartType = 'strip' | 'screw' | 'nut' | 'corner-bracket' | 'angle-bracket';
 
@@ -23,7 +24,6 @@ export interface Joint {
 }
 
 const getHoleOffset = (type: PartType, index: number) => {
-    const HOLE_SPACING = 12.7;
     if (type === 'corner-bracket') {
         if (index === 0) return new THREE.Vector3(0, 0, 0);
         if (index === 1) return new THREE.Vector3(HOLE_SPACING, 0, 0);
@@ -115,8 +115,6 @@ export const useStore = create<StoreState>((set, get) => ({
             const otherPart = parts.find((p) => p.id === otherPartId);
 
             if (otherPart) {
-                const THICKNESS = 1;
-
                 // Helper to get world position of a hole
                 const getHoleWorldPos = (p: Part, hIndex: number) => {
                     const pPos = new THREE.Vector3(...p.position);
@@ -191,8 +189,6 @@ export const useStore = create<StoreState>((set, get) => ({
 
             if (partA && partB) {
                 console.log('Assembling', partA.id, selectedHole.holeIndex, 'to', partB.id, holeIndex);
-
-                const THICKNESS = 1;
 
                 // Check connectivity
                 const isAnchored = (pid: string) => joints.some(j => j.partA === pid || j.partB === pid);
